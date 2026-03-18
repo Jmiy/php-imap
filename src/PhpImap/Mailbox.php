@@ -168,7 +168,7 @@ class Mailbox
     /**
      * @throws InvalidParameterException
      */
-    public function __construct(string $imapPath, string $login, string $password, string $attachmentsDir = null, string $serverEncoding = 'UTF-8', bool $trimImapPath = true, bool $attachmentFilenameMode = false)
+    public function __construct(string $imapPath, string $login, string $password, string|null $attachmentsDir = null, string $serverEncoding = 'UTF-8', bool $trimImapPath = true, bool $attachmentFilenameMode = false)
     {
         $this->imapPath = (true == $trimImapPath) ? \trim($imapPath) : $imapPath;
         $this->imapLogin = \trim($login);
@@ -418,7 +418,7 @@ class Mailbox
      *
      * @throws InvalidParameterException
      */
-    public function setConnectionArgs(int $options = 0, int $retriesNum = 0, array $params = null): void
+    public function setConnectionArgs(int $options = 0, int $retriesNum = 0, array|null $params = null): void
     {
         if (0 !== $options) {
             if (($options & self::IMAP_OPTIONS_SUPPORTED_VALUES) !== $options) {
@@ -1047,6 +1047,7 @@ class Mailbox
      * @param int         $criteria       Sorting criteria (eg. SORTARRIVAL)
      * @param bool        $reverse        Sort reverse or not
      * @param string|null $searchCriteria See http://php.net/imap_search for a complete list of available criteria
+     * @param string|null $charset
      *
      * @psalm-param value-of<Imap::SORT_CRITERIA> $criteria
      *
@@ -1058,7 +1059,7 @@ class Mailbox
         int $criteria = SORTARRIVAL,
         bool $reverse = true,
         ?string $searchCriteria = 'ALL',
-        string $charset = null
+        string|null $charset = null
     ): array {
         return Imap::sort(
             $this->getImapStream(),
@@ -1672,8 +1673,8 @@ class Mailbox
     public function appendMessageToMailbox(
         $message,
         string $mailbox = '',
-        string $options = null,
-        string $internal_date = null
+        string|null $options = null,
+        string|null $internal_date = null
     ): bool {
         if (
             \is_array($message) &&
